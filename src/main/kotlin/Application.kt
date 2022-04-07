@@ -2,7 +2,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import config.Configuration
 import config.defaultKoinModules
-import core.application.basket.AggregationApiPort
+import core.application.aggregate.AggregationApiPort
 import core.application.basketdata.BasketDataApiPort
 import core.application.basketdata.BasketDataItemApiPort
 import core.application.calculation.BasketCalculationApiPort

@@ -6,7 +6,6 @@ import core.domain.shipping.service.ShippingCostService
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.money.compositeMoney
 import org.jetbrains.exposed.sql.statements.InsertStatement
-import org.jetbrains.exposed.sql.statements.UpdateStatement
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import secondary.repository.basketdata.relational.VatAmountTable
 import java.math.BigDecimal
@@ -20,17 +19,10 @@ fun Table.money(name: String): CompositeColumn<MonetaryAmount> {
     return func(this)
 }
 
+
 inline fun Table.metricSelect(crossinline where: SqlExpressionBuilder.() -> Op<Boolean>) = run {
     Metric.read(this.tableName)
     this.select(where)
-}
-
-fun <T : Table> T.metricUpdate(
-    where: (SqlExpressionBuilder.() -> Op<Boolean>),
-    body: T.(UpdateStatement) -> Unit,
-): Int = run {
-    Metric.write(this.tableName)
-    this.update(where = where, body = body)
 }
 
 fun <T : Table> T.metricInsertOrUpdate(vararg keys: Column<*>, body: T.(InsertStatement<Number>) -> Unit) =

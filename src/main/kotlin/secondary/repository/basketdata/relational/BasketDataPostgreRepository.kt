@@ -14,7 +14,10 @@ import core.domain.product.model.Vat
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.ResultRow
-import secondary.repository.common.relational.*
+import secondary.repository.common.relational.PostgresRepository
+import secondary.repository.common.relational.mapVatAmounts
+import secondary.repository.common.relational.metricInsertOrUpdate
+import secondary.repository.common.relational.metricSelect
 import java.math.BigDecimal
 import java.util.*
 
@@ -23,7 +26,7 @@ class BasketDataPostgreRepository(
 ) : BasketDataRepository, PostgresRepository(
     tables = arrayOf(BasketDataTable, BasketItemTable, BasketItemItemCostVatTable, BasketItemTotalCostVatTable)
 ) {
-    override fun findStaleBasketData(id: BasketId): BasketData {
+    override fun findBasketData(id: BasketId): BasketData {
         val dao = BasketDataTable.metricSelect { BasketDataTable.id eq id.id }.single()
         return mapBasketData(id, dao)
     }
@@ -34,7 +37,6 @@ class BasketDataPostgreRepository(
             it[outletId] = basketData.getOutletId()
             it[status] = basketData.getStatus()
             it[orderId] = basketData.getOrder()?.orderRef?.id
-            it[outdated] = basketData.getOutdated()
         }
         basketData.getItems().forEach { item ->
             BasketItemTable.metricInsertOrUpdate(BasketItemTable.id) {
@@ -75,19 +77,6 @@ class BasketDataPostgreRepository(
         }
     }
 
-    override fun resetOutdatedFlag(id: BasketId) {
-        BasketDataTable.metricUpdate({
-            BasketDataTable.id eq id.id
-        }) {
-            it[outdated] = false
-        }
-    }
-
-    override fun resetOutdatedFlag(basketData: BasketData) {
-        basketData.setOutdated(false)
-        resetOutdatedFlag(basketData.getBasketId())
-    }
-
 
     private fun mapBasketData(basketId: BasketId, dao: ResultRow): BasketData {
         return BasketDataAggregate(
@@ -95,7 +84,6 @@ class BasketDataPostgreRepository(
             outletId = dao[BasketDataTable.outletId],
             status = dao[BasketDataTable.status],
             order = dao[BasketDataTable.orderId]?.let { Order(OrderRef(it)) },
-            outdated = dao[BasketDataTable.outdated],
             items = mapBasketItems(basketId),
         )
     }

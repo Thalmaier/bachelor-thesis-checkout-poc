@@ -10,10 +10,9 @@ interface BasketCalculationService {
 
     fun recalculateIfNecessaryAndSave(
         basketId: BasketId,
-        basketData: BasketData? = null,
+        basketData: BasketData,
         checkoutData: CheckoutData? = null,
         paymentProcess: PaymentProcess? = null,
     ): BasketCalculation
 
-    fun getUpdatedCalculation(id: BasketId): BasketCalculation
 }

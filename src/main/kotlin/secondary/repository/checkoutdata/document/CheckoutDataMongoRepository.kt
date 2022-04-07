@@ -28,13 +28,6 @@ class CheckoutDataMongoRepository(
             ?: checkoutDataFactory.createNewCheckoutData(id)
     }
 
-    override fun resetOutdatedFlag(id: BasketId) {
-        findCheckoutData(id).also {
-            it.setOutdated(false)
-            save(it)
-        }
-    }
-
     override fun save(checkoutData: CheckoutData) {
         logger.info { "Save payment process for id ${checkoutData.getBasketId()}" }
         Metric.write("Checkout")

@@ -1,6 +1,6 @@
 package primary.aggregate;
 
-import core.application.basket.AggregationApiPort
+import core.application.aggregate.AggregationApiPort
 import core.domain.aggregate.Aggregates
 import core.domain.basketdata.model.BasketData
 import core.domain.basketdata.model.BasketId

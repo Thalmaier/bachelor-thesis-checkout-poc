@@ -2,6 +2,8 @@ package core.domain.payment.model
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
+import core.domain.basketdata.BasketDataRepository
+import core.domain.basketdata.model.BasketData
 import core.domain.basketdata.model.BasketId
 import core.domain.common.Entity
 import core.domain.common.throwIf
@@ -40,13 +42,17 @@ class PaymentProcessAggregate(
     /**
      * Add a new payment to the payment process
      */
-    override fun addPayment(basketTotal: MonetaryAmount, payment: Payment): PaymentProcessAggregate = this.also {
+    override fun addPayment(
+        basketTotal: MonetaryAmount, payment: Payment,
+        basketDataRepository: BasketDataRepository,
+    ): PaymentProcessAggregate = this.also {
+        val basketData = validateIfModificationIsAllowed(basketDataRepository)
         throwIf(basketTotal.isZero) { IllegalModificationError("No payment on empty basket") }
         throwIf(newBasketTotalAlreadyPaid(basketTotal, payment)) {
             IllegalModificationError("basket already fully paid")
         }
         payments.add(payment)
-        calculate(basketTotal)
+        calculate(basketTotal, basketData)
     }
 
     private fun newBasketTotalAlreadyPaid(basketTotal: MonetaryAmount, payment: Payment): Boolean {
@@ -56,13 +62,18 @@ class PaymentProcessAggregate(
     /**
      * Calculates the usage of all [Payment]s and updates the [PaymentStatus]
      */
-    override fun calculate(basketTotal: MonetaryAmount) {
-        calculateAmounts(basketTotal)
+    override fun calculate(basketTotal: MonetaryAmount, basketDataRepository: BasketDataRepository) {
+        calculate(basketTotal, basketDataRepository.findBasketData(id))
+    }
+
+    override fun calculate(basketTotal: MonetaryAmount, basketData: BasketData) {
+        validateIfModificationIsAllowed(basketData)
+        resetAmounts(basketTotal)
         calculatePayments()
         updateStatus()
     }
 
-    private fun calculateAmounts(basketTotal: MonetaryAmount) {
+    private fun resetAmounts(basketTotal: MonetaryAmount) {
         amountToPay = basketTotal
         amountPaid = Money.zero(amountToPay.currency)
         amountToReturn = Money.zero(amountToPay.currency)
@@ -114,15 +125,20 @@ class PaymentProcessAggregate(
     /**
      * Cancels a certain [Payment] of the payment process
      */
-    override fun cancelPayment(id: PaymentId, basketTotal: MonetaryAmount): PaymentProcessAggregate = this.apply {
+    override fun cancelPayment(
+        id: PaymentId, basketTotal: MonetaryAmount,
+        basketDataRepository: BasketDataRepository,
+    ): PaymentProcessAggregate = this.apply {
+        val basketData = validateIfModificationIsAllowed(basketDataRepository)
         findPayment(id).cancel()
-        calculate(basketTotal)
+        calculate(basketTotal, basketData)
     }
 
     /**
      * Resets the [PaymentProcessAggregate] and all contained [Payment]s
      */
-    override fun reset(): PaymentProcessAggregate = this.apply {
+    override fun reset(basketDataRepository: BasketDataRepository): PaymentProcessAggregate = this.apply {
+        validateIfModificationIsAllowed(basketDataRepository)
         externalPaymentRef = null
         payments.forEach(Payment::select)
     }
@@ -138,6 +154,16 @@ class PaymentProcessAggregate(
                 invalidIf(node, "fullyPaid", !isFullyPaid(), "should be fully paid")
             )
         }
+    }
+
+    private fun validateIfModificationIsAllowed(basketDataRepository: BasketDataRepository): BasketData {
+        return basketDataRepository.findBasketData(id).also { basketData ->
+            validateIfModificationIsAllowed(basketData)
+        }
+    }
+
+    private fun validateIfModificationIsAllowed(basketData: BasketData): BasketData {
+        return basketData.also { it.validateIfModificationIsAllowed() }
     }
 
     private fun findPayment(id: PaymentId): Payment {

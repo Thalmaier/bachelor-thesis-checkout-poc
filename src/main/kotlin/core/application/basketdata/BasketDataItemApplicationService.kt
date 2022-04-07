@@ -10,6 +10,7 @@ import core.domain.basketdata.model.BasketId
 import core.domain.basketdata.model.BasketItem
 import core.domain.basketdata.model.BasketItemId
 import core.domain.basketdata.service.BasketDataRefreshService
+import core.domain.calculation.service.BasketCalculationService
 import core.domain.checkoutdata.CheckoutDataRepository
 import core.domain.common.Transaction
 import core.domain.common.throwIf
@@ -31,6 +32,7 @@ class BasketDataItemApplicationService(
     private val checkoutDataRepository: CheckoutDataRepository,
     private val shippingCostsService: ShippingCostService,
     private val basketDataRefreshService: BasketDataRefreshService,
+    private val basketCalculationService: BasketCalculationService,
 ) : BasketDataItemApiPort {
 
     private val logger = KotlinLogging.logger {}
@@ -50,7 +52,7 @@ class BasketDataItemApplicationService(
         val price = pricingService.fetchPriceInformation(basketData.getOutletId(), productId)
         if (calculateAndSave) {
             val checkoutData = checkoutDataRepository.findCheckoutData(basketData.getBasketId())
-            basketData.addBasketItemAndRecalculate(product, price, checkoutData, shippingCostsService)
+            basketData.addBasketItemAndRecalculate(product, price, checkoutData, shippingCostsService, basketCalculationService)
             basketDataRepository.save(basketData)
             logger.info { "Saved basket ${basketData.getBasketId()} with new item" }
         } else {
@@ -67,10 +69,10 @@ class BasketDataItemApplicationService(
         }
     }
 
-    private fun removeBasketItem(basketData: BasketData, basketItemId: BasketItemId, save: Boolean = true) {
+    private fun removeBasketItem(basketData: BasketData, basketItemId: BasketItemId, calculateAndSave: Boolean = true) {
         logger.info { "Remove item $basketItemId from basket ${basketData.getBasketId()}" }
-        if (save) {
-            basketData.removeBasketItem(basketItemId)
+        if (calculateAndSave) {
+            basketData.removeBasketItemAndRecalculate(basketItemId, basketCalculationService)
             basketDataRepository.save(basketData)
             logger.info { "Saved basket ${basketData.getBasketId()} after deleting a item" }
         } else {
@@ -103,9 +105,10 @@ class BasketDataItemApplicationService(
         try {
             when {
                 difference > 0 -> repeat(difference) {
-                    items.take(difference).forEach { item ->
-                        removeBasketItem(basketData, item.id, save = false)
+                    items.take(difference - 1).forEach { item ->
+                        removeBasketItem(basketData, item.id, calculateAndSave = false)
                     }
+                    removeBasketItem(basketData, items.last().id, calculateAndSave = true)
                 }
                 difference < 0 -> {
                     repeat(difference.absoluteValue - 1) {
@@ -122,7 +125,7 @@ class BasketDataItemApplicationService(
             logger.info { "Adjusting the quantity failed with exception, saving the basket to preserve changes due to message: ${e.message}" }
             val checkoutData = checkoutDataRepository.findCheckoutData(basketData.getBasketId())
             val shippingCosts = shippingCostsService.calculateShippingCost(basketData, checkoutData)
-            basketData.calculateBasketItemsAndUpdateShippingCost(shippingCosts)
+            basketData.updateShippingCostAndRecalculateBasket(shippingCosts, basketCalculationService)
             basketDataRepository.save(basketData)
         }
     }

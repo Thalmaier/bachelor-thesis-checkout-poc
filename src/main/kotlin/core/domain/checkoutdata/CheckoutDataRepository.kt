@@ -20,5 +20,4 @@ interface CheckoutDataRepository {
      */
     fun save(checkoutData: CheckoutData)
 
-    fun resetOutdatedFlag(id: BasketId)
 }

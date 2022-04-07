@@ -10,21 +10,19 @@ import org.jetbrains.exposed.sql.ResultRow
 import secondary.repository.common.relational.PostgresRepository
 import secondary.repository.common.relational.metricInsertOrUpdate
 import secondary.repository.common.relational.metricSelect
-import secondary.repository.common.relational.metricUpdate
 
 class CheckoutDataPostgreRepository : CheckoutDataRepository, PostgresRepository(
     tables = arrayOf(CheckoutDataTable)
 ) {
     override fun findCheckoutData(id: BasketId): CheckoutData {
         val dao = CheckoutDataTable.metricSelect { CheckoutDataTable.id eq id.id }.singleOrNull()
-        return dao?.let {
+        return dao?.let { dao ->
             CheckoutDataAggregate(
                 id = BasketId(dao[CheckoutDataTable.id]),
                 fulfillmentType = dao[CheckoutDataTable.fulfillment],
                 customer = mapCustomer(dao),
                 billingAddress = mapBillingAddress(dao),
                 shippingAddress = mapShippingAddress(dao),
-                outdated = dao[CheckoutDataTable.outdated]
             )
         } ?: CheckoutDataAggregate(id = id)
     }
@@ -33,7 +31,6 @@ class CheckoutDataPostgreRepository : CheckoutDataRepository, PostgresRepository
         CheckoutDataTable.metricInsertOrUpdate(CheckoutDataTable.id) {
             it[id] = checkoutData.getBasketId().id
             it[fulfillment] = checkoutData.getFulfillment()
-            it[outdated] = checkoutData.getOutdated()
             checkoutData.getCustomer()?.let { customer ->
                 when (customer.type) {
                     CustomerType.SESSION_ID -> {
@@ -68,14 +65,6 @@ class CheckoutDataPostgreRepository : CheckoutDataRepository, PostgresRepository
                 it[billingAddressStreet] = billing.street
                 it[billingAddressHouseNumber] = billing.houseNumber
             }
-        }
-    }
-
-    override fun resetOutdatedFlag(id: BasketId) {
-        CheckoutDataTable.metricUpdate(where = {
-            CheckoutDataTable.id eq id.id
-        }) {
-            it[outdated] = false
         }
     }
 

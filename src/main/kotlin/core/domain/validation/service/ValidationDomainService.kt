@@ -36,11 +36,11 @@ class ValidationDomainService(
         val basketDataResult = basketData.validate()
 
         val paymentProcessResult = paymentProcess.validate()
-        val basketCalculation = basketCalculationRepository.findStaleBasketCalculation(basketData.getBasketId())
+        val basketCalculation = basketCalculationRepository.findBasketCalculation(basketData.getBasketId())
         val basketCalculationResult = basketCalculation.validate()
         val checkoutData = checkoutDataRepository.findCheckoutData(basketData.getBasketId())
         val checkoutDataResult = checkoutData.validate()
-        val calculationOutdatedResult = validateIfCalculationWasOutdated(basketData, checkoutData, basketCalculation, paymentProcess)
+        val calculationOutdatedResult = validateIfCalculationWasOutdated(basketData, checkoutData, basketCalculation)
         val totalResult = basketDataResult.addResults(
             paymentProcessResult, basketCalculationResult, checkoutDataResult, calculationOutdatedResult
         )
@@ -54,16 +54,14 @@ class ValidationDomainService(
      */
     private fun validateIfCalculationWasOutdated(
         basketData: BasketData, checkoutData: CheckoutData,
-        basketCalculation: BasketCalculation, paymentProcess: PaymentProcess,
+        basketCalculation: BasketCalculation,
     ): ValidationResult {
         if (basketData.canBeModified()) {
             val shippingCost = shippingCostService.calculateShippingCost(basketData, checkoutData)
-            basketData.calculateBasketItemsAndUpdateShippingCost(shippingCost)
+            basketData.updateShippingCostAndRecalculateBasket(shippingCost, basketCalculationService)
         }
 
-        val after = basketCalculationService.recalculateIfNecessaryAndSave(
-            basketData.getBasketId(), basketData, checkoutData, paymentProcess
-        )
+        val after = basketCalculationRepository.findBasketCalculation(basketData.getBasketId())
 
         return ValidationResult().addResults(
             validIfEqual(basketCalculation.getGrandTotal(), after.getGrandTotal(), "total is incorrect"),

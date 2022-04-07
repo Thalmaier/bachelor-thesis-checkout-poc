@@ -5,7 +5,7 @@ import core.domain.basketdata.BasketDataRepository
 import core.domain.basketdata.model.BasketData
 import core.domain.basketdata.model.BasketId
 import core.domain.basketdata.service.BasketDataRefreshService
-import core.domain.calculation.service.BasketCalculationService
+import core.domain.calculation.BasketCalculationRepository
 import core.domain.checkoutdata.CheckoutDataRepository
 import core.domain.common.DomainService
 import core.domain.common.Transaction
@@ -28,9 +28,9 @@ class PaymentProcessDomainService(
     private val validationService: ValidationService,
     private val orderService: OrderService,
     private val checkoutDataRepository: CheckoutDataRepository,
-    private val basketCalculationService: BasketCalculationService,
     private val basketDataRefreshService: BasketDataRefreshService,
     private val paymentProcessRepository: PaymentProcessRepository,
+    private val basketCalculationRepository: BasketCalculationRepository,
 ) : PaymentProcessApiPort {
 
     private val logger = KotlinLogging.logger {}
@@ -43,19 +43,17 @@ class PaymentProcessDomainService(
         return Transaction {
             val basketData = basketDataRefreshService.getRefreshedBasketData(basketId)
             val checkoutData = checkoutDataRepository.findCheckoutData(basketId)
-            val basketCalculation =
-                basketCalculationService.recalculateIfNecessaryAndSave(basketId, basketData = basketData, checkoutData = checkoutData)
+            val basketCalculation = basketCalculationRepository.findBasketCalculation(basketId)
             logger.info { "Determine available payment methods for basket $basketId" }
             paymentPort.determineAvailablePaymentMethods(basketData, checkoutData, basketCalculation)
         }
     }
 
     override fun cancelPayment(basketId: BasketId, paymentId: PaymentId): Aggregates {
-        validateIfModificationIsAllowed(basketId)
         return Transaction {
             paymentProcessRepository.findPaymentProcess(basketId).let { paymentProcess ->
-                val basketCalculation = basketCalculationService.getUpdatedCalculation(basketId)
-                paymentProcess.cancelPayment(paymentId, basketCalculation.getGrandTotal())
+                val basketCalculation = basketCalculationRepository.findBasketCalculation(basketId)
+                paymentProcess.cancelPayment(paymentId, basketCalculation.getGrandTotal(), basketDataRepository)
                 paymentProcessRepository.save(paymentProcess)
                 logger.info { "Canceled payment $paymentId for basket $basketId" }
                 Aggregates(paymentProcess)
@@ -64,14 +62,10 @@ class PaymentProcessDomainService(
     }
 
     override fun addPayment(basketId: BasketId, payment: Payment): Aggregates {
-        validateIfModificationIsAllowed(basketId)
-
         return Transaction {
             paymentProcessRepository.findPaymentProcess(basketId).let { paymentProcess ->
-                val basketCalculation = basketCalculationService.recalculateIfNecessaryAndSave(
-                    basketId, paymentProcess = paymentProcess
-                )
-                paymentProcess.addPayment(basketCalculation.getGrandTotal(), payment)
+                val basketCalculation = basketCalculationRepository.findBasketCalculation(basketId)
+                paymentProcess.addPayment(basketCalculation.getGrandTotal(), payment, basketDataRepository)
                 paymentProcessRepository.save(paymentProcess)
                 logger.info { "Stored basket $basketId with new payment ${payment.id} " }
                 Aggregates(paymentProcess)
@@ -114,7 +108,7 @@ class PaymentProcessDomainService(
     override fun executePaymentProcessAndFinalizeBasket(basketId: BasketId): Aggregates {
         return Transaction {
             paymentProcessRepository.findPaymentProcess(basketId).let { paymentProcess ->
-                val basketData = basketDataRepository.findStaleBasketData(basketId)
+                val basketData = basketDataRepository.findBasketData(basketId)
                 throwIf(!basketData.isFrozen() || !paymentProcess.isInitialized()) {
                     IllegalModificationError("cannot execute payment progress if it is not initialized")
                 }
@@ -140,21 +134,13 @@ class PaymentProcessDomainService(
             throwIf(!paymentProcess.isInitialized()) {
                 IllegalModificationError("cannot cancel payment progress if it is not initialized")
             }
-            val basketData = basketDataRepository.findStaleBasketData(basketId)
+            val basketData = basketDataRepository.findBasketData(basketId)
             basketData.unfreeze()
-            paymentProcess.reset()
             basketDataRepository.save(basketData)
+            paymentProcess.reset(basketDataRepository)
             paymentProcessRepository.save(paymentProcess)
             logger.info { "Payment process for basket $basketId was canceled" }
             return Aggregates(paymentProcess)
-        }
-    }
-
-    private fun validateIfModificationIsAllowed(basketId: BasketId): BasketData {
-        return Transaction {
-            basketDataRefreshService.getRefreshedBasketData(basketId).also { basketData ->
-                basketData.validateIfModificationIsAllowed()
-            }
         }
     }
 

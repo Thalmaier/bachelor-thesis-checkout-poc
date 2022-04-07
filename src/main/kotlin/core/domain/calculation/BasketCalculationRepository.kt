@@ -15,6 +15,6 @@ interface BasketCalculationRepository {
      */
     fun save(basketCalculation: BasketCalculation)
 
-    fun findStaleBasketCalculation(id: BasketId): BasketCalculation
+    fun findBasketCalculation(id: BasketId): BasketCalculation
 
 }

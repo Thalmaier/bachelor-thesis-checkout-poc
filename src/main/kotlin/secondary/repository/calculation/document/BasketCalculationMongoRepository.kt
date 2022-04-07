@@ -21,7 +21,7 @@ class BasketCalculationMongoRepository(
     private val logger = KotlinLogging.logger {}
     override val collection = database.getCollection<BasketCalculation>(config.documentOriented.basketCalculationCollectionName)
 
-    override fun findStaleBasketCalculation(id: BasketId): BasketCalculation {
+    override fun findBasketCalculation(id: BasketId): BasketCalculation {
         Metric.read("Calculation")
         return collection.findOne(BasketCalculationAggregate::id eq id) ?: BasketCalculationAggregate(id)
     }

@@ -3,6 +3,7 @@ package core.domain.basketdata.model
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import config.Config
+import core.domain.calculation.service.BasketCalculationService
 import core.domain.checkoutdata.model.CheckoutData
 import core.domain.common.*
 import core.domain.exception.IllegalModificationError
@@ -29,23 +30,22 @@ class BasketDataAggregate(
     private var status: BasketStatus = BasketStatus.OPEN,
     private val items: MutableList<BasketItem> = mutableListOf(),
     private var order: Order? = null,
-    private var outdated: Boolean = true,
 ) : BasketData, Entity(id) {
 
     override fun addBasketItem(product: Product, price: Price) = this.apply {
         validateIfModificationIsAllowed() and validateMaxItemAmountForNewItems(product.id)
         val basketItem = BasketItem(id = BasketItemId(), product = product, price = price)
         items.add(basketItem)
-        this.outdated = true
     }
 
     override fun addBasketItemAndRecalculate(
         product: Product, price: Price, checkoutData: CheckoutData,
         shippingCostService: ShippingCostService,
+        basketCalculationService: BasketCalculationService,
     ) = this.apply {
         addBasketItem(product, price)
         val shippingCosts = shippingCostService.calculateShippingCost(this, checkoutData)
-        calculateBasketItemsAndUpdateShippingCost(shippingCosts)
+        updateShippingCostAndRecalculateBasket(shippingCosts, basketCalculationService)
     }
 
     /**
@@ -69,7 +69,20 @@ class BasketDataAggregate(
         items.find { it.id == basketItemId }?.let { basketItem ->
             items.remove(basketItem)
         } ?: throw ResourceNotFoundError("item", basketItemId)
-        this.outdated = true
+    }
+
+    override fun removeBasketItemAndRecalculate(
+        basketItemId: BasketItemId,
+        basketCalculationService: BasketCalculationService,
+    ) = this.apply {
+        validateIfModificationIsAllowed()
+        val itemRemoved = items.find { it.id == basketItemId }?.let { basketItem ->
+            items.remove(basketItem)
+        } ?: throw ResourceNotFoundError("item", basketItemId)
+
+        if (itemRemoved) {
+            basketCalculationService.recalculateIfNecessaryAndSave(id, this)
+        }
     }
 
     override fun finalize(): BasketData = this.apply {
@@ -88,11 +101,7 @@ class BasketDataAggregate(
 
     override fun refreshPrices(pricePort: PricePort): ModifiedResult<BasketData> {
         validateIfModificationIsAllowed()
-        return updateBasketItems { item -> item.refreshPrice(pricePort) }.toRefreshResult(this).also {
-            if (it.modified) {
-                this.outdated = true
-            }
-        }
+        return updateBasketItems { item -> item.refreshPrice(pricePort) }.toRefreshResult(this)
     }
 
     override fun requiresProductRefresh(): Boolean {
@@ -101,20 +110,23 @@ class BasketDataAggregate(
 
     override fun refreshProducts(productPort: ProductPort): ModifiedResult<BasketData> {
         validateIfModificationIsAllowed()
-        return updateBasketItems { item -> item.refreshProduct(productPort) }.toRefreshResult(this).also {
-            if (it.modified) {
-                this.outdated = true
-            }
-        }
+        return updateBasketItems { item -> item.refreshProduct(productPort) }.toRefreshResult(this)
     }
 
     /**
      * Recalculate all [BasketItem]s and update their shipping costs
      */
-    override fun calculateBasketItemsAndUpdateShippingCost(shippingCosts: ProductsShippingCost): ModifiedResult<Unit> {
+    override fun updateShippingCostAndRecalculateBasket(
+        shippingCosts: ProductsShippingCost,
+        basketCalculationService: BasketCalculationService,
+    ): ModifiedResult<Unit> {
         return updateBasketItems { item ->
             val shippingCost = shippingCosts.getOrDefault(item.getProductId(), ShippingCostService.ZERO_MONEY)
             item.calculate(shippingCost)
+        }.also { result ->
+            if (result.modified) {
+                basketCalculationService.recalculateIfNecessaryAndSave(id, this)
+            }
         }
     }
 
@@ -133,7 +145,7 @@ class BasketDataAggregate(
      * Update all [BasketItem]s with a modification function and return the result.
      * @return [ModifiedResult.Updated] if at least one item was updated, else [ModifiedResult.Unchanged]
      */
-    override fun updateBasketItems(update: (BasketItem) -> ModifiedResult<BasketItem>): ModifiedResult<Unit> {
+    private fun updateBasketItems(update: (BasketItem) -> ModifiedResult<BasketItem>): ModifiedResult<Unit> {
         var updated = false
         items.replaceAll { item ->
             val result = update(item)
@@ -176,7 +188,6 @@ class BasketDataAggregate(
 
     @JsonIgnore
     override fun getBasketId(): BasketId = this.id
-
     override fun getOutletId(): OutletId = this.outletId
     override fun getStatus(): BasketStatus = this.status
     override fun getOrder(): Order? = this.order
@@ -194,8 +205,4 @@ class BasketDataAggregate(
     @JsonIgnore
     override fun getProductIdList(): List<ProductId> = this.items.map(BasketItem::getProductId)
 
-    override fun getOutdated(): Boolean = this.outdated
-    override fun setOutdated(outdated: Boolean) {
-        this.outdated = outdated
-    }
 }

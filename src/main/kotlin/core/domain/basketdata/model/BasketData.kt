@@ -1,6 +1,7 @@
 package core.domain.basketdata.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import core.domain.calculation.service.BasketCalculationService
 import core.domain.checkoutdata.model.CheckoutData
 import core.domain.common.ModifiedResult
 import core.domain.exception.IllegalModificationError
@@ -29,8 +30,9 @@ interface BasketData {
      * Calls [validateIfModificationIsAllowed] beforehand.
      */
     fun addBasketItemAndRecalculate(
-        product: Product, price: Price,
-        checkoutData: CheckoutData, shippingCostService: ShippingCostService,
+        product: Product, price: Price, checkoutData: CheckoutData,
+        shippingCostService: ShippingCostService,
+        basketCalculationService: BasketCalculationService,
     ): BasketData
 
     /**
@@ -98,7 +100,6 @@ interface BasketData {
 
     @JsonIgnore
     fun getBasketId(): BasketId
-
     fun getOutletId(): OutletId
     fun getStatus(): BasketStatus
     fun getItems(): List<BasketItem>
@@ -113,10 +114,11 @@ interface BasketData {
 
     @JsonIgnore
     fun isFrozen(): Boolean
-    fun updateBasketItems(update: (BasketItem) -> ModifiedResult<BasketItem>): ModifiedResult<Unit>
     fun freeze(): BasketData
-    fun getOutdated(): Boolean
-    fun setOutdated(outdated: Boolean)
-    fun calculateBasketItemsAndUpdateShippingCost(shippingCosts: ProductsShippingCost): ModifiedResult<Unit>
+    fun updateShippingCostAndRecalculateBasket(
+        shippingCosts: ProductsShippingCost,
+        basketCalculationService: BasketCalculationService,
+    ): ModifiedResult<Unit>
 
+    fun removeBasketItemAndRecalculate(basketItemId: BasketItemId, basketCalculationService: BasketCalculationService): BasketDataAggregate
 }

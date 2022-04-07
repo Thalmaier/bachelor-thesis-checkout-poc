@@ -26,23 +26,11 @@ class BasketDataMongoRepository(
     private val logger = KotlinLogging.logger {}
     override val collection = database.getCollection<BasketData>(config.documentOriented.basketDataCollectionName)
 
-    override fun findStaleBasketData(id: BasketId): BasketData {
-        logger.info { "Load stale basket $id from the database" }
+    override fun findBasketData(id: BasketId): BasketData {
+        logger.info { "Load basket $id from the database" }
         Metric.read("Basket")
         return collection.findOne(BasketDataAggregate::id eq id)
             ?: throw ResourceNotFoundError("basketData", id)
-    }
-
-    override fun resetOutdatedFlag(id: BasketId) {
-        this.findStaleBasketData(id).also {
-            it.setOutdated(false)
-            save(it)
-        }
-    }
-
-    override fun resetOutdatedFlag(basketData: BasketData) {
-        basketData.setOutdated(false)
-        save(basketData)
     }
 
     override fun save(basketData: BasketData) {

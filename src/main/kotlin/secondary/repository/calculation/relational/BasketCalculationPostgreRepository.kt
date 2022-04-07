@@ -30,7 +30,7 @@ class BasketCalculationPostgreRepository : BasketCalculationRepository, Postgres
         }
     }
 
-    override fun findStaleBasketCalculation(id: BasketId): BasketCalculation {
+    override fun findBasketCalculation(id: BasketId): BasketCalculation {
         val dao = BasketCalculationTable.metricSelect { BasketCalculationTable.id eq id.id }.singleOrNull()
         return dao?.let { mapCalculationResult(it, id) } ?: BasketCalculationAggregate(id)
     }

@@ -3,6 +3,7 @@ package core.domain.basketdata.service
 import core.domain.basketdata.BasketDataRepository
 import core.domain.basketdata.model.BasketData
 import core.domain.basketdata.model.BasketId
+import core.domain.calculation.service.BasketCalculationService
 import core.domain.checkoutdata.CheckoutDataRepository
 import core.domain.common.DomainService
 import core.domain.common.ModifiedResult
@@ -21,12 +22,13 @@ class BasketDataRefreshDomainService(
     private val shippingCostService: ShippingCostService,
     private val checkoutDataRepository: CheckoutDataRepository,
     private val basketDataRepository: BasketDataRepository,
+    private val basketCalculationService: BasketCalculationService,
 ) : BasketDataRefreshService {
 
     private val logger = KotlinLogging.logger {}
 
     override fun getRefreshedBasketData(basketId: BasketId): BasketData {
-        val staleBasketData = basketDataRepository.findStaleBasketData(basketId)
+        val staleBasketData = basketDataRepository.findBasketData(basketId)
         refreshAndUpdateBasketDataWithoutSaving(staleBasketData).also { result ->
             if (result.modified) {
                 basketDataRepository.save(staleBasketData)
@@ -44,19 +46,12 @@ class BasketDataRefreshDomainService(
         val refreshedPrices = refreshPricesIfNecessary(basketData).modified
         val refreshedProducts = refreshProductIfNecessary(basketData).modified
 
-        val checkoutData = checkoutDataRepository.findCheckoutData(basketData.getBasketId())
-        val checkoutDataOutdated = checkoutData.getOutdated()
-
-        if (refreshedPrices || refreshedProducts || checkoutDataOutdated) {
-            basketData.calculateBasketItemsAndUpdateShippingCost(
-                shippingCostService.calculateShippingCost(basketData, checkoutData)
+        if (refreshedPrices || refreshedProducts) {
+            val checkoutData = checkoutDataRepository.findCheckoutData(basketData.getBasketId())
+            basketData.updateShippingCostAndRecalculateBasket(
+                shippingCostService.calculateShippingCost(basketData, checkoutData),
+                basketCalculationService
             )
-            basketData.setOutdated(true)
-
-            if (checkoutDataOutdated) {
-                checkoutDataRepository.resetOutdatedFlag(basketData.getBasketId())
-            }
-
             return ModifiedResult.Updated(basketData)
         }
 

@@ -8,7 +8,6 @@ import org.jetbrains.exposed.sql.Table
 object CheckoutDataTable : Table() {
     val id = uuid("id").uniqueIndex()
     override val primaryKey = PrimaryKey(id)
-    val outdated = bool("outdated")
     val fulfillment = enumeration("fulfillment", FulfillmentType::class)
     val customerType = enumeration("customerType", CustomerType::class).nullable()
     val customerSessionId = uuid("customerSessionId").nullable()

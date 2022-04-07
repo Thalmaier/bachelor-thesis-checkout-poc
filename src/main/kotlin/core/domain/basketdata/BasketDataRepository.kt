@@ -16,14 +16,10 @@ interface BasketDataRepository {
      * Returns a stale version of the [BasketData] for a [BasketId].
      * Data like [Price] or [Product] will not be updated.
      */
-    fun findStaleBasketData(id: BasketId): BasketData
+    fun findBasketData(id: BasketId): BasketData
 
     /**
      * Stores the [BasketData] in the database
      */
     fun save(basketData: BasketData)
-
-    fun resetOutdatedFlag(id: BasketId)
-
-    fun resetOutdatedFlag(basketData: BasketData)
 }

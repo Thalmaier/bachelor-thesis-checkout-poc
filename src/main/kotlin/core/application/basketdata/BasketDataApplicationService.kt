@@ -53,7 +53,7 @@ class BasketDataApplicationService(
 
     override fun cancelBasket(basketId: BasketId): Aggregates {
         return Transaction {
-            basketDataRepository.findStaleBasketData(basketId).let { basketData ->
+            basketDataRepository.findBasketData(basketId).let { basketData ->
                 basketData.cancel()
                 basketDataRepository.save(basketData)
                 logger.info { "Canceled basket with id ${basketData.getBasketId()}" }
@@ -64,7 +64,7 @@ class BasketDataApplicationService(
 
     override fun getAvailableFulfillment(basketId: BasketId): List<FulfillmentType> {
         return Transaction {
-            val basket = basketDataRepository.findStaleBasketData(basketId)
+            val basket = basketDataRepository.findBasketData(basketId)
             fulfillmentPort.getPossibleFulfillment(basket.getOutletId()).also {
                 logger.info { "Fetched available fulfillment for basket ${basket.getBasketId()}" }
             }

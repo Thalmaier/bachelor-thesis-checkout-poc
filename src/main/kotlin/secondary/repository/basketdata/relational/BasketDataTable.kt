@@ -15,7 +15,6 @@ object BasketDataTable : Table() {
     val outletId = varchar("outletId", 50)
     val status = enumeration("status", BasketStatus::class)
     val orderId = uuid("orderId").nullable()
-    val outdated = bool("outdated")
 }
 
 

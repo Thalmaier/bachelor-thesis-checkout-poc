@@ -1,5 +1,5 @@
 database:
-  useRelationalDatabase: true
+  useRelationalDatabase: false
   documentOriented:
     databaseName: basket
     connectionUrl: mongodb://localhost:27006
@@ -9,13 +9,13 @@ database:
     basketCalculationCollectionName: calculation
     priceCacheCollectionName: priceCache
     productCacheCollectionName: productCache
-    useInMemoryMongodb: false
+    useInMemoryMongodb: true
     inMemoryMongodbPort: 7777
   relational:
     connectionUrl: jdbc:postgresql://localhost:5432/postgres
     driverClassName: org.postgresql.Driver
     username: postgres
-    password: St12011998
+    password:
     useInMemoryPostgres: false
     inMemoryPostgresPort: 7778
 
