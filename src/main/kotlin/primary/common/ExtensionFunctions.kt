@@ -6,8 +6,7 @@ import io.ktor.util.pipeline.*
 import java.util.*
 
 /**
- * Creates a [UUID] from a [request parameter][param]
- * @param param name of the parameter in the url
+ * Returns a [UUID] from the value of a passed [request parameter][param]
  * @throws [BadRequestError] if the parameter does not exist or is invalid
  */
 fun PipelineContext<*, ApplicationCall>.parseUUIDFromParameter(param: String): UUID {
@@ -20,7 +19,6 @@ fun PipelineContext<*, ApplicationCall>.parseUUIDFromParameter(param: String): U
 
 /**
  * Returns the value of the passed [request parameter][param]
- * @param param name of the parameter in the url
  * @throws [BadRequestError] if the parameter does not exist
  */
 fun PipelineContext<*, ApplicationCall>.fromParameter(param: String): String =

@@ -4,10 +4,9 @@ import core.domain.product.model.Product
 import core.domain.product.model.ProductId
 import secondary.adapter.SecondaryAdapter
 import secondary.repository.product.ProductCache
-import secondary.repository.product.document.CachedProductMongoRepository
 
 /**
- * Adapter for a [ProductAdapter], which stores the result in a [CachedProductMongoRepository]
+ * Adapter for a [ProductAdapter], which stores the result in a [CachedProductRepository]
  */
 @SecondaryAdapter
 class CachedProductAdapter(

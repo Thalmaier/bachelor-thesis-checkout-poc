@@ -1,33 +1,34 @@
 package core.domain.order.service
 
-import core.domain.basket.BasketRepository
-import core.domain.basket.model.Basket
-import core.domain.basket.model.BasketStatus
+import core.domain.basketdata.BasketDataRepository
+import core.domain.basketdata.model.BasketData
+import core.domain.basketdata.model.BasketStatus
 import core.domain.common.DomainService
 import core.domain.common.throwIf
 import core.domain.exception.IllegalModificationError
 import core.domain.order.OrderPort
+import core.domain.payment.model.PaymentProcess
 import mu.KotlinLogging
 
 @DomainService
 class OrderDomainService(
     private val orderPort: OrderPort,
-    private val basketRepository: BasketRepository,
+    private val basketDataRepository: BasketDataRepository,
 ) : OrderService {
 
     private val logger = KotlinLogging.logger {}
 
-    override fun createOrder(basket: Basket) {
-        throwIf(basket.getStatus() != BasketStatus.FINALIZED) {
+    override fun createOrder(basketData: BasketData, paymentProcess: PaymentProcess) {
+        throwIf(basketData.getStatus() != BasketStatus.FINALIZED) {
             IllegalModificationError("Cannot create order if basket is not finalized")
         }
-        throwIf(!basket.isPaymentInitialized()) {
+        throwIf(!paymentProcess.isInitialized()) {
             IllegalModificationError("Cannot create order if basket payment process is not created")
         }
-        logger.info { "Create order for basket ${basket.getBasketId()}" }
-        val orderData = orderPort.createOrder(basket)
-        basket.setOrder(orderData)
-        basketRepository.save(basket)
+        logger.info { "Create order for basket ${basketData.getBasketId()}" }
+        val orderData = orderPort.createOrder(basketData, paymentProcess)
+        basketData.setOrder(orderData)
+        basketDataRepository.save(basketData)
     }
 
 }

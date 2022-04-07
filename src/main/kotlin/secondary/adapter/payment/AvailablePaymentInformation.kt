@@ -1,8 +1,10 @@
 package secondary.adapter.payment
 
-import core.domain.basket.model.Basket
-import core.domain.basket.model.FulfillmentType
-import core.domain.basket.model.OutletId
+import core.domain.basketdata.model.BasketData
+import core.domain.basketdata.model.FulfillmentType
+import core.domain.basketdata.model.OutletId
+import core.domain.calculation.model.BasketCalculation
+import core.domain.checkoutdata.model.CheckoutData
 import javax.money.MonetaryAmount
 
 /**
@@ -13,9 +15,9 @@ data class AvailablePaymentInformation(
     val amountToPay: MonetaryAmount,
     val fulfillmentType: FulfillmentType,
 ) {
-    constructor(basket: Basket) : this(
-        outletId = basket.getOutletId(),
-        amountToPay = basket.getCalculationResult().grandTotal,
-        fulfillmentType = basket.getFulfillment()
+    constructor(basketData: BasketData, checkoutData: CheckoutData, basketCalculation: BasketCalculation) : this(
+        outletId = basketData.getOutletId(),
+        amountToPay = basketCalculation.getGrandTotal(),
+        fulfillmentType = checkoutData.getFulfillment()
     )
 }

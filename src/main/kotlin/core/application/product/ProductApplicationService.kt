@@ -10,7 +10,9 @@ import mu.KotlinLogging
  * Implementation of the [ProductService]
  */
 @ApplicationService
-class ProductApplicationService(private val productPort: ProductPort) : ProductService {
+class ProductApplicationService(
+    private val productPort: ProductPort,
+) : ProductService {
 
     private val logger = KotlinLogging.logger {}
 

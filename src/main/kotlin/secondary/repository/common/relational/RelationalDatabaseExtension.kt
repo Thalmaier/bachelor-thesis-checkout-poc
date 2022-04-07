@@ -1,11 +1,16 @@
 package secondary.repository.common.relational
 
 import core.application.metric.Metric
+import core.domain.calculation.model.VatAmount
 import core.domain.shipping.service.ShippingCostService
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.money.compositeMoney
 import org.jetbrains.exposed.sql.statements.InsertStatement
+import org.jetbrains.exposed.sql.statements.UpdateStatement
 import org.jetbrains.exposed.sql.transactions.TransactionManager
+import secondary.repository.basketdata.relational.VatAmountTable
+import java.math.BigDecimal
+import java.util.*
 import javax.money.MonetaryAmount
 
 fun Table.money(name: String): CompositeColumn<MonetaryAmount> {
@@ -20,7 +25,15 @@ inline fun Table.metricSelect(crossinline where: SqlExpressionBuilder.() -> Op<B
     this.select(where)
 }
 
-fun <T : Table> T.insertOrUpdate(vararg keys: Column<*>, body: T.(InsertStatement<Number>) -> Unit) =
+fun <T : Table> T.metricUpdate(
+    where: (SqlExpressionBuilder.() -> Op<Boolean>),
+    body: T.(UpdateStatement) -> Unit,
+): Int = run {
+    Metric.write(this.tableName)
+    this.update(where = where, body = body)
+}
+
+fun <T : Table> T.metricInsertOrUpdate(vararg keys: Column<*>, body: T.(InsertStatement<Number>) -> Unit) =
     InsertOrUpdate<Number>(keys, this).apply {
         body(this)
         execute(TransactionManager.current())
@@ -38,4 +51,18 @@ class InsertOrUpdate<Key : Any>(
         val onConflict = "ON CONFLICT ($keyColumns) DO UPDATE SET $updateSetter;"
         return "${super.prepareSQL(transaction)} $onConflict"
     }
+}
+
+fun <T : VatAmountTable> mapVatAmounts(table: T, id: UUID): Map<Int, VatAmount> {
+    val map = mutableMapOf<Int, VatAmount>()
+    table as Table
+    table.metricSelect { table.parentId eq id }.forEach { res ->
+        val vatAmount = VatAmount(
+            sign = res[table.sign],
+            rate = BigDecimal(res[table.rate]),
+            amount = res[table.amount],
+        )
+        map[vatAmount.sign] = vatAmount
+    }
+    return map
 }

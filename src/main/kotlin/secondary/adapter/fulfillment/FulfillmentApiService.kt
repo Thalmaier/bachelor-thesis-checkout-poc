@@ -1,7 +1,7 @@
 package secondary.adapter.fulfillment
 
-import core.domain.basket.model.FulfillmentType
-import core.domain.basket.model.OutletId
+import core.domain.basketdata.model.FulfillmentType
+import core.domain.basketdata.model.OutletId
 import mu.KotlinLogging
 import secondary.adapter.MockTimeoutService
 

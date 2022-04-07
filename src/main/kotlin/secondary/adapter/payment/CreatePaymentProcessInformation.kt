@@ -1,7 +1,9 @@
 package secondary.adapter.payment
 
-import core.domain.basket.model.*
-import core.domain.basket.model.customer.Customer
+import core.domain.basketdata.model.*
+import core.domain.basketdata.model.customer.Customer
+import core.domain.checkoutdata.model.CheckoutData
+import core.domain.payment.model.PaymentProcess
 import javax.money.MonetaryAmount
 
 /**
@@ -16,12 +18,12 @@ data class CreatePaymentProcessInformation(
     val customer: Customer?,
 ) {
 
-    constructor(basket: Basket) : this(
-        basketId = basket.getBasketId(),
-        outletId = basket.getOutletId(),
-        amountToPay = basket.getCalculationResult().grandTotal,
-        fulfillmentType = basket.getFulfillment(),
-        shippingAddress = basket.getShippingAddress(),
-        customer = basket.getCustomer()
+    constructor(basketData: BasketData, checkoutData: CheckoutData, paymentProcess: PaymentProcess) : this(
+        basketId = basketData.getBasketId(),
+        outletId = basketData.getOutletId(),
+        amountToPay = paymentProcess.getAmountToPay(),
+        fulfillmentType = checkoutData.getFulfillment(),
+        shippingAddress = checkoutData.getShippingAddress(),
+        customer = checkoutData.getCustomer()
     )
 }

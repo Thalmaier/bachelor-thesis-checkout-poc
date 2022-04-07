@@ -1,7 +1,7 @@
 package secondary.adapter.shipping
 
 import config.Config
-import core.domain.basket.model.FulfillmentType
+import core.domain.basketdata.model.FulfillmentType
 import mu.KotlinLogging
 import org.javamoney.moneta.Money
 import secondary.adapter.MockTimeoutService

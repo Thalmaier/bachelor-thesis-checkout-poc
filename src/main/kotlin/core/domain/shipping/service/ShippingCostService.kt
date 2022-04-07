@@ -1,8 +1,9 @@
 package core.domain.shipping.service
 
 import config.Config
-import core.domain.basket.model.Basket
-import core.domain.calculation.model.BasketCalculationResult
+import core.domain.basketdata.model.BasketData
+import core.domain.calculation.model.BasketCalculationAggregate
+import core.domain.checkoutdata.model.CheckoutData
 import core.domain.product.model.Vat
 import core.domain.shipping.model.ProductsShippingCost
 import org.javamoney.moneta.Money
@@ -14,7 +15,7 @@ import javax.money.MonetaryOperator
 import javax.money.RoundingQueryBuilder
 
 /**
- * Interface for calculating a [BasketCalculationResult] or [ProductsShippingCost]
+ * Interface for calculating a [BasketCalculationAggregate] or [ProductsShippingCost]
  */
 interface ShippingCostService {
 
@@ -37,7 +38,7 @@ interface ShippingCostService {
     }
 
     /**
-     * Calculates the [ProductsShippingCost] of a [Basket]
+     * Calculates the [ProductsShippingCost] of a [BasketData]
      */
-    fun calculateShippingCost(basket: Basket): ProductsShippingCost
+    fun calculateShippingCost(basketData: BasketData, checkoutData: CheckoutData): ProductsShippingCost
 }

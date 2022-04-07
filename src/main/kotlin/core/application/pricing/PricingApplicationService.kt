@@ -1,7 +1,7 @@
 package core.application.pricing
 
 import core.application.ApplicationService
-import core.domain.basket.model.OutletId
+import core.domain.basketdata.model.OutletId
 import core.domain.price.PricePort
 import core.domain.price.model.Price
 import core.domain.price.model.PriceId
@@ -12,7 +12,9 @@ import mu.KotlinLogging
  * Implementation of the [PricingService]
  */
 @ApplicationService
-class PricingApplicationService(private val pricePort: PricePort) : PricingService {
+class PricingApplicationService(
+    private val pricePort: PricePort,
+) : PricingService {
 
     private val logger = KotlinLogging.logger {}
 

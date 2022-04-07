@@ -1,14 +1,19 @@
 package core.domain.validation.service
 
 import com.sksamuel.hoplite.fp.NonEmptyList
-import core.domain.basket.BasketRepository
-import core.domain.basket.model.Basket
-import core.domain.basket.service.BasketRefreshService
-import core.domain.calculation.model.BasketCalculationResult
+import core.domain.basketdata.BasketDataRepository
+import core.domain.basketdata.model.BasketData
+import core.domain.basketdata.service.BasketDataRefreshService
+import core.domain.calculation.BasketCalculationRepository
+import core.domain.calculation.model.BasketCalculation
+import core.domain.calculation.model.BasketCalculationAggregate
+import core.domain.calculation.service.BasketCalculationService
+import core.domain.checkoutdata.CheckoutDataRepository
+import core.domain.checkoutdata.model.CheckoutData
 import core.domain.common.DomainService
 import core.domain.exception.ValidationError
+import core.domain.payment.model.PaymentProcess
 import core.domain.shipping.service.ShippingCostService
-import core.domain.validation.invalidIf
 import core.domain.validation.model.Invalid
 import core.domain.validation.model.ValidationResult
 import core.domain.validation.validIfEqual
@@ -16,49 +21,65 @@ import mu.KotlinLogging
 
 @DomainService
 class ValidationDomainService(
+    private val basketDataRepository: BasketDataRepository,
+    private val basketCalculationRepository: BasketCalculationRepository,
+    private val checkoutDataRepository: CheckoutDataRepository,
+    private val basketDataRefreshService: BasketDataRefreshService,
     private val shippingCostService: ShippingCostService,
-    private val basketRepository: BasketRepository,
-    private val refreshService: BasketRefreshService,
+    private val basketCalculationService: BasketCalculationService,
 ) : ValidationService {
 
     private val logger = KotlinLogging.logger {}
 
-    override fun validateAndThrowIfInvalid(basket: Basket) {
+    override fun validateAndThrowIfInvalid(basketData: BasketData, paymentProcess: PaymentProcess) {
         logger.info { "Validate basket for unsatisfied business rules" }
-        val result = basket.validateBasketState()
-        validateCalculationAndStoreIfOutdated(basket, result)
-        result.onInvalid { refreshIfValidationFailedDueToRefreshRequired(it, basket) }
-        result.throwIfInvalid { errors -> ValidationError(errors) }
+        val basketDataResult = basketData.validate()
+
+        val paymentProcessResult = paymentProcess.validate()
+        val basketCalculation = basketCalculationRepository.findStaleBasketCalculation(basketData.getBasketId())
+        val basketCalculationResult = basketCalculation.validate()
+        val checkoutData = checkoutDataRepository.findCheckoutData(basketData.getBasketId())
+        val checkoutDataResult = checkoutData.validate()
+        val calculationOutdatedResult = validateIfCalculationWasOutdated(basketData, checkoutData, basketCalculation, paymentProcess)
+        val totalResult = basketDataResult.addResults(
+            paymentProcessResult, basketCalculationResult, checkoutDataResult, calculationOutdatedResult
+        )
+
+        totalResult.onInvalid { refreshIfValidationFailedDueToRefreshRequired(it, basketData) }
+        totalResult.throwIfInvalid { errors -> ValidationError(errors) }
     }
 
     /**
-     * Validates if the [BasketCalculationResult] is up-to-date
+     * Validates if the [BasketCalculationAggregate] is up-to-date
      */
-    private fun validateCalculationAndStoreIfOutdated(basket: Basket, result: ValidationResult) {
-        val before = basket.getCalculationResult()
-        val updateResult = basket.calculateAndUpdate(shippingCostService)
-        val after = basket.getCalculationResult()
-        result.addResults(
-            invalidIf("basket", "calculationResult", updateResult.modified, "calculation resulted in update"),
-            validIfEqual(before.grandTotal, after.grandTotal, "total is incorrect"),
+    private fun validateIfCalculationWasOutdated(
+        basketData: BasketData, checkoutData: CheckoutData,
+        basketCalculation: BasketCalculation, paymentProcess: PaymentProcess,
+    ): ValidationResult {
+        if (basketData.canBeModified()) {
+            val shippingCost = shippingCostService.calculateShippingCost(basketData, checkoutData)
+            basketData.calculateBasketItemsAndUpdateShippingCost(shippingCost)
+        }
+
+        val after = basketCalculationService.recalculateIfNecessaryAndSave(
+            basketData.getBasketId(), basketData, checkoutData, paymentProcess
+        )
+
+        return ValidationResult().addResults(
+            validIfEqual(basketCalculation.getGrandTotal(), after.getGrandTotal(), "total is incorrect"),
             validIfEqual(
-                before.shippingCostTotal,
-                after.shippingCostTotal,
+                basketCalculation.getShippingCostTotal(),
+                after.getShippingCostTotal(),
                 "shippingCostTotal is incorrect"
             ),
-            validIfEqual(before.netTotal, after.netTotal, "netTotal is incorrect"),
+            validIfEqual(basketCalculation.getNetTotal(), after.getNetTotal(), "netTotal is incorrect"),
         )
-        if (updateResult.modified) {
-            // Save modified basket
-            // We still want to fail the validation that the client can review the changed basket, before trying again
-            basketRepository.save(basket)
-        }
     }
 
-    private fun refreshIfValidationFailedDueToRefreshRequired(errors: NonEmptyList<Invalid>, basket: Basket) {
+    private fun refreshIfValidationFailedDueToRefreshRequired(errors: NonEmptyList<Invalid>, basketData: BasketData) {
         if (errors.list.filterIsInstance<Invalid.RefreshRequired>().isNotEmpty()) {
-            refreshService.refreshBasketDataWithoutSaving(basket)
-            basketRepository.save(basket)
+            basketDataRefreshService.refreshAndUpdateBasketDataWithoutSaving(basketData)
+            basketDataRepository.save(basketData)
         }
     }
 

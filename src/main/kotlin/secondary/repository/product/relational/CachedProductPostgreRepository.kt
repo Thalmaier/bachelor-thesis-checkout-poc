@@ -11,7 +11,7 @@ import secondary.common.TimeUtils
 import secondary.repository.Repository
 import secondary.repository.common.Cacheable
 import secondary.repository.common.relational.PostgresRepository
-import secondary.repository.common.relational.insertOrUpdate
+import secondary.repository.common.relational.metricInsertOrUpdate
 import secondary.repository.common.relational.metricSelect
 import secondary.repository.product.CachedProduct
 import secondary.repository.product.ProductCache
@@ -29,7 +29,7 @@ class CachedProductPostgreRepository(
 
     override fun put(entity: Cacheable<ProductId, Product>) {
         Transaction {
-            CachedProductTable.insertOrUpdate(CachedProductTable.productId) {
+            CachedProductTable.metricInsertOrUpdate(CachedProductTable.productId) {
                 it[productId] = entity.payload.id.id
                 it[productName] = entity.payload.name
                 it[productVatSign] = entity.payload.vat.sign

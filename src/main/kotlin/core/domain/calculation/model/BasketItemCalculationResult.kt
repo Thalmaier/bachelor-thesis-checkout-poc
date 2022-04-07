@@ -1,6 +1,7 @@
 package core.domain.calculation.model
 
-import core.domain.basket.model.BasketItem
+import core.domain.basketdata.model.BasketId
+import core.domain.basketdata.model.BasketItem
 import core.domain.shipping.model.ShippingCost
 import core.domain.shipping.service.ShippingCostService
 
@@ -27,12 +28,13 @@ data class BasketItemCalculationResult(
 }
 
 /**
- * Transforms a [BasketItemCalculationResult] into a [BasketCalculationResult]
+ * Transforms a [BasketItemCalculationResult] into a [BasketCalculationAggregate]
  */
-fun BasketItemCalculationResult?.toBasketCalculationResult(): BasketCalculationResult {
+fun BasketItemCalculationResult?.toBasketCalculationResult(basketId: BasketId): BasketCalculationAggregate {
     return when {
-        this == null -> BasketCalculationResult()
-        else -> BasketCalculationResult(
+        this == null -> BasketCalculationAggregate(basketId)
+        else -> BasketCalculationAggregate(
+            basketId,
             grandTotal = itemCost.grossAmount.add(shippingCost),
             netTotal = itemCost.netAmount,
             shippingCostTotal = shippingCost,

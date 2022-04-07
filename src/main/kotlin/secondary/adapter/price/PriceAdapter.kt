@@ -10,7 +10,9 @@ import secondary.adapter.exception.FetchingExternalResourceError
  * Adapter for a [PricePort]
  */
 @SecondaryAdapter
-open class PriceAdapter(private val priceApiService: PriceApiService) : PricePort {
+open class PriceAdapter(
+    private val priceApiService: PriceApiService,
+) : PricePort {
 
     override fun fetchPrice(priceId: PriceId): Price {
         return priceApiService.fetchPrice(priceId)

@@ -53,13 +53,11 @@ data class DatabaseConfig(
 )
 
 data class DocumentOrientedDatabaseConfig(
-    val databaseName: String,
-    val connectionUrl: String,
-    val basketCollectionName: String,
-    val priceCacheCollectionName: String,
-    val productCacheCollectionName: String,
-    val useInMemoryMongodb: Boolean,
-    val inMemoryMongodbPort: Int,
+    val databaseName: String, val connectionUrl: String,
+    val basketDataCollectionName: String, val paymentProcessCollectionName: String,
+    val basketCalculationCollectionName: String, val checkoutDataCollectionName: String,
+    val priceCacheCollectionName: String, val productCacheCollectionName: String,
+    val useInMemoryMongodb: Boolean, val inMemoryMongodbPort: Int,
 )
 
 data class RelationalDatabaseConfig(

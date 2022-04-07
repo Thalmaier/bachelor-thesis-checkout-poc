@@ -1,6 +1,6 @@
 package core.domain.shipping.model
 
-import core.domain.basket.model.BasketItem
+import core.domain.basketdata.model.BasketItem
 import javax.money.MonetaryAmount
 
 /**

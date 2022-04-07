@@ -7,7 +7,11 @@ import core.domain.product.model.Vat
 /**
  * DTO for transporting the response of the [ProductApiService]
  */
-data class ProductApiResponse(val id: ProductId, val name: String, val vat: Vat) {
+data class ProductApiResponse(
+    val id: ProductId,
+    val name: String,
+    val vat: Vat,
+) {
     fun toProduct(): Product {
         return Product(
             id = id,

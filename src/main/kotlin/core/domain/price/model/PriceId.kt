@@ -1,6 +1,6 @@
 package core.domain.price.model
 
-import core.domain.basket.model.OutletId
+import core.domain.basketdata.model.OutletId
 import core.domain.product.model.ProductId
 
 /**
