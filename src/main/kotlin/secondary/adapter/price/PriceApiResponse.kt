@@ -8,7 +8,10 @@ import javax.money.MonetaryAmount
 /**
  * DTO for transporting the response of the [PriceApiService]
  */
-data class PriceApiResponse(val id: PriceId, val grossAmount: MonetaryAmount) {
+data class PriceApiResponse(
+    val id: PriceId,
+    val grossAmount: MonetaryAmount,
+) {
     fun toPrice(): Price {
         return Price(
             id = id,

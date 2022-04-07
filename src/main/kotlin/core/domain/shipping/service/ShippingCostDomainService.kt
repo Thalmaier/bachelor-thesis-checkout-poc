@@ -1,7 +1,8 @@
 package core.domain.shipping.service
 
-import core.domain.basket.model.Basket
-import core.domain.basket.model.FulfillmentType
+import core.domain.basketdata.model.BasketData
+import core.domain.basketdata.model.FulfillmentType
+import core.domain.checkoutdata.model.CheckoutData
 import core.domain.common.DomainService
 import core.domain.shipping.ShippingPort
 import core.domain.shipping.model.ProductsShippingCost
@@ -14,12 +15,12 @@ class ShippingCostDomainService(
 
     private val logger = KotlinLogging.logger {}
 
-    override fun calculateShippingCost(basket: Basket): ProductsShippingCost {
-        logger.info { "Calculate shipping cost for basket ${basket.getBasketId()}" }
+    override fun calculateShippingCost(basketData: BasketData, checkoutData: CheckoutData): ProductsShippingCost {
+        logger.info { "Calculate shipping cost for basket ${basketData.getBasketId()}" }
 
-        return when (basket.getFulfillment()) {
+        return when (checkoutData.getFulfillment()) {
             FulfillmentType.PICKUP -> emptyMap()
-            else -> shippingPort.determineShippingCosts(basket)
+            else -> shippingPort.determineShippingCosts(basketData, checkoutData)
         }
     }
 

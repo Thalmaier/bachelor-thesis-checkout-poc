@@ -10,7 +10,9 @@ import secondary.adapter.exception.FetchingExternalResourceError
  * Adapter for a [ProductPort]
  */
 @SecondaryAdapter
-open class ProductAdapter(private val productApiService: ProductApiService) : ProductPort {
+open class ProductAdapter(
+    private val productApiService: ProductApiService,
+) : ProductPort {
 
     override fun fetchProduct(productId: ProductId): Product {
         return productApiService.fetchProduct(productId)

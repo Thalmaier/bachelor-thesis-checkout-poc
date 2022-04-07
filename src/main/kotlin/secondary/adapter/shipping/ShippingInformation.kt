@@ -1,8 +1,9 @@
 package secondary.adapter.shipping
 
-import core.domain.basket.model.Address
-import core.domain.basket.model.Basket
-import core.domain.basket.model.FulfillmentType
+import core.domain.basketdata.model.Address
+import core.domain.basketdata.model.BasketData
+import core.domain.basketdata.model.FulfillmentType
+import core.domain.checkoutdata.model.CheckoutData
 import core.domain.product.model.ProductId
 
 /**
@@ -13,9 +14,9 @@ data class ShippingInformation(
     val shippingAddress: Address?,
     val items: List<ProductId>,
 ) {
-    constructor(basket: Basket) : this(
-        basket.getFulfillment(),
-        basket.getShippingAddress(),
-        basket.getProductIdList()
+    constructor(basketData: BasketData, checkoutData: CheckoutData) : this(
+        checkoutData.getFulfillment(),
+        checkoutData.getShippingAddress(),
+        basketData.getProductIdList()
     )
 }

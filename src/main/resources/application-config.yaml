@@ -1,19 +1,22 @@
 database:
-  useRelationalDatabase: false
+  useRelationalDatabase: true
   documentOriented:
     databaseName: basket
-    connectionUrl: mongodb://localhost:27017
-    basketCollectionName: basket
+    connectionUrl: mongodb://localhost:27006
+    basketDataCollectionName: basketdata
+    checkoutDataCollectionName: checkout
+    paymentProcessCollectionName: paymentprocess
+    basketCalculationCollectionName: calculation
     priceCacheCollectionName: priceCache
     productCacheCollectionName: productCache
-    useInMemoryMongodb: true
-    inMemoryMongodbPort: 27017
+    useInMemoryMongodb: false
+    inMemoryMongodbPort: 7777
   relational:
     connectionUrl: jdbc:postgresql://localhost:5432/postgres
     driverClassName: org.postgresql.Driver
     username: postgres
-    password:
-    useInMemoryPostgres: true
+    password: St12011998
+    useInMemoryPostgres: false
     inMemoryPostgresPort: 7778
 
 businessRules:
@@ -23,7 +26,7 @@ businessRules:
 application:
   port: 8080
   simulateApiCalls: false
-  recordMetrics: true
+  recordMetrics: false
 
 caching:
   defaultCachedTimeInSeconds: 60

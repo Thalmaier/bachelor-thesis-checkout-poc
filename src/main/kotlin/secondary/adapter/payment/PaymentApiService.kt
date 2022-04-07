@@ -1,6 +1,6 @@
 package secondary.adapter.payment
 
-import core.domain.basket.model.FulfillmentType
+import core.domain.basketdata.model.FulfillmentType
 import core.domain.payment.model.ExternalPaymentRef
 import core.domain.payment.model.PaymentMethod
 import mu.KotlinLogging

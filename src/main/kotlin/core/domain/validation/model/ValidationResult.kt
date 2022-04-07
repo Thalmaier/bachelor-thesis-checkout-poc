@@ -12,6 +12,10 @@ class ValidationResult(private val errors: MutableList<Validated> = mutableListO
      */
     fun addResults(vararg items: Validated): ValidationResult = this.apply { errors.addAll(items) }
 
+    fun addResults(vararg items: ValidationResult): ValidationResult = this.also {
+        this.errors.addAll(items.flatMap { it.errors })
+    }
+
     /**
      * Throws the passed [Throwable] if at least one result was invalid
      */

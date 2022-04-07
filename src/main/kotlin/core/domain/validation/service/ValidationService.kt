@@ -1,16 +1,17 @@
 package core.domain.validation.service
 
-import core.domain.basket.model.Basket
+import core.domain.basketdata.model.BasketData
 import core.domain.exception.ValidationError
+import core.domain.payment.model.PaymentProcess
 
 /**
- * Service for validation of a [Basket]
+ * Service for validation of a [BasketData]
  */
 interface ValidationService {
 
     /**
-     * Validates a [Basket] and if validation failed throws an exception
+     * Validates all aggregates
      * @throws [ValidationError] if validation failed
      */
-    fun validateAndThrowIfInvalid(basket: Basket)
+    fun validateAndThrowIfInvalid(basketData: BasketData, paymentProcess: PaymentProcess)
 }

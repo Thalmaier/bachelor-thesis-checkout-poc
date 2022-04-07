@@ -1,7 +1,8 @@
 package core.domain.order.service
 
-import core.domain.basket.model.Basket
-import core.domain.basket.model.BasketStatus
+import core.domain.basketdata.model.BasketData
+import core.domain.basketdata.model.BasketStatus
+import core.domain.payment.model.PaymentProcess
 
 /**
  * Service for creating orders
@@ -9,8 +10,8 @@ import core.domain.basket.model.BasketStatus
 interface OrderService {
 
     /**
-     * Create an order for a [finalized][BasketStatus.FINALIZED] [Basket]
+     * Create an order for a [finalized][BasketStatus.FINALIZED] [BasketData] and [PaymentProcess]
      */
-    fun createOrder(basket: Basket)
+    fun createOrder(basketData: BasketData, paymentProcess: PaymentProcess)
 
 }

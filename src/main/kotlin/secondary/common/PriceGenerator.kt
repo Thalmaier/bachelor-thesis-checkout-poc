@@ -6,7 +6,8 @@ import javax.money.MonetaryAmount
 import kotlin.random.Random
 
 /**
- * Generates a random amount of money. Used for mocking external systems.
+ * Generates a random amount of money.
+ * Used for mocking external systems.
  */
 fun generateRandomMonetaryAmount(maxAmount: Double = 100.0): MonetaryAmount {
     return Monetary

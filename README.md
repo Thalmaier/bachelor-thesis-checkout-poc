@@ -18,7 +18,7 @@ upsides and drawbacks of each design.
 ![Variant A Overview](https://i.imgur.com/3HFGtOn.png)
 
 Variant A features one big aggregate. This leads to a comparatively easy implementation and high performance due to
-less database queries. However, simultaneous api calls on the same resources are not possible. 
+less database queries. However, simultaneous api calls on the same resources are not possible.
 
 ### Variant D
 
@@ -40,6 +40,6 @@ The software configuration is done via an application-config.yaml file located i
 ## API Description
 
 The API is documented with the openapi standard v3. The files can be found in the 'additional-resources' folder or
-online on swaggerhub:  
-- [Online API Documentation for Variant A](https://app.swaggerhub.com/apis/xThale/checkout-poc-variant-a)  
+online on swaggerhub:
+- [Online API Documentation for Variant A](https://app.swaggerhub.com/apis/xThale/checkout-poc-variant-a)
 - [Online API Documentation for Variant D](https://app.swaggerhub.com/apis/xThale/checkout-poc-variant-a)

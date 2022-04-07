@@ -1,8 +1,9 @@
 package core.domain.order
 
-import core.domain.basket.model.Basket
+import core.domain.basketdata.model.BasketData
 import core.domain.common.Port
 import core.domain.order.model.Order
+import core.domain.payment.model.PaymentProcess
 
 /**
  * Port for communication with the order adapter
@@ -11,8 +12,8 @@ import core.domain.order.model.Order
 interface OrderPort {
 
     /**
-     * Creates a [Order] in the external system and returns the reference on it
+     * Creates a order in the external system and returns the reference on it
      */
-    fun createOrder(basket: Basket): Order
+    fun createOrder(basketData: BasketData, paymentProcess: PaymentProcess): Order
 
 }

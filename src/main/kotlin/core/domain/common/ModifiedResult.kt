@@ -1,6 +1,6 @@
 package core.domain.common
 
-sealed class ModifiedResult<T>(val modified: Boolean, val payload: T) {
+sealed class ModifiedResult<out T>(val modified: Boolean, val payload: T) {
 
     abstract fun <K> setPayload(payload: K): ModifiedResult<K>
 

@@ -2,7 +2,7 @@ package core.domain.product.model
 
 import config.Config
 import config.ProductConfig
-import core.domain.basket.model.BasketItem
+import core.domain.basketdata.model.BasketItem
 import core.domain.validation.model.ValidationResult
 import core.domain.validation.requiresRefreshIf
 import secondary.common.TimeUtils

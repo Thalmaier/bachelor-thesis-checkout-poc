@@ -2,9 +2,13 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import config.Configuration
 import config.defaultKoinModules
-import core.application.basket.BasketApiPort
-import core.application.basket.BasketItemApiPort
-import core.domain.payment.service.PaymentApiPort
+import core.application.basket.AggregationApiPort
+import core.application.basketdata.BasketDataApiPort
+import core.application.basketdata.BasketDataItemApiPort
+import core.application.calculation.BasketCalculationApiPort
+import core.application.checkoutdata.CheckoutDataApiPort
+import core.domain.payment.service.PaymentProcessApiPort
+import io.ktor.application.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -15,8 +19,10 @@ import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.litote.kmongo.util.KMongoConfiguration
 import org.zalando.jackson.datatype.money.MoneyModule
-import primary.basket.BasketController
-import primary.basket.BasketItemController
+import primary.aggregate.AggregateController
+import primary.basketdata.BasketDataController
+import primary.calculation.BasketCalculationController
+import primary.checkoutdata.CheckoutDataController
 import primary.common.apiExceptionHandler
 import primary.common.contentHandler
 import primary.metric.MetricController
@@ -24,8 +30,6 @@ import primary.payment.PaymentController
 import secondary.repository.common.InMemoryDatabaseProcess
 import secondary.repository.common.document.MongoDB
 import secondary.repository.common.relational.PostgresDB
-import java.util.*
-import javax.money.format.MonetaryFormats
 
 fun main() {
     CheckoutApplication().execute()
@@ -38,9 +42,12 @@ class CheckoutApplication : KoinComponent {
 
     private val logger = KotlinLogging.logger {}
     private val config: Configuration by inject()
-    private val basketApiPort: BasketApiPort by inject()
-    private val basketItemApiPort: BasketItemApiPort by inject()
-    private val paymentApiPort: PaymentApiPort by inject()
+    private val aggregationApplicationService: AggregationApiPort by inject()
+    private val basketDataApiPort: BasketDataApiPort by inject()
+    private val basketDataItemApiPort: BasketDataItemApiPort by inject()
+    private val paymentApiPort: PaymentProcessApiPort by inject()
+    private val basketCalculationApiPort: BasketCalculationApiPort by inject()
+    private val checkoutDataApiPort: CheckoutDataApiPort by inject()
 
     /**
      * Initializes all necessary configuration of the application
@@ -56,14 +63,7 @@ class CheckoutApplication : KoinComponent {
     fun execute() {
         InMemoryDatabaseProcess.startInMemoryDatabaseIfNecessary(config.database)
         val server = embeddedServer(Netty, port = config.application.port) {
-            contentHandler()
-            apiExceptionHandler()
-            routing {
-                BasketController(basketApiPort).route(this)
-                BasketItemController(basketItemApiPort).route(this)
-                PaymentController(paymentApiPort).route(this)
-                MetricController().route(this)
-            }
+            defaultServerModules()
         }
         shutdownHook(server)
         logger.info { "Starting server \uD83D\uDE80" }
@@ -71,12 +71,26 @@ class CheckoutApplication : KoinComponent {
     }
 
     /**
+     * Default modules used by the web server of this application to respond to api requests
+     */
+    val defaultServerModules: Application.() -> Unit = {
+        contentHandler()
+        apiExceptionHandler()
+        routing {
+            AggregateController(aggregationApplicationService).route(this)
+            BasketDataController(basketDataApiPort, basketDataItemApiPort).route(this)
+            PaymentController(paymentApiPort).route(this)
+            CheckoutDataController(checkoutDataApiPort).route(this)
+            BasketCalculationController(basketCalculationApiPort).route(this)
+            MetricController().route(this)
+        }
+    }
+
+    /**
      * Initializes the database configuration
      */
     private fun initKMongoConfiguration() {
-        KMongoConfiguration.registerBsonModule(
-            MoneyModule().withFormatting { MonetaryFormats.getAmountFormat(Locale.getDefault()) }
-        )
+        KMongoConfiguration.registerBsonModule(MoneyModule())
         KMongoConfiguration.bsonMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
     }
 

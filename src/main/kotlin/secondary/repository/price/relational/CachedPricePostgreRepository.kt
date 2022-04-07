@@ -13,7 +13,7 @@ import secondary.common.TimeUtils
 import secondary.repository.Repository
 import secondary.repository.common.Cacheable
 import secondary.repository.common.relational.PostgresRepository
-import secondary.repository.common.relational.insertOrUpdate
+import secondary.repository.common.relational.metricInsertOrUpdate
 import secondary.repository.common.relational.metricSelect
 import secondary.repository.price.CachedPrice
 import secondary.repository.price.CachedPriceTable
@@ -30,7 +30,7 @@ class CachedPricePostgreRepository(
 
     override fun put(entity: Cacheable<PriceId, Price>) {
         Transaction {
-            CachedPriceTable.insertOrUpdate(CachedPriceTable.productId, CachedPriceTable.outletId) {
+            CachedPriceTable.metricInsertOrUpdate(CachedPriceTable.productId, CachedPriceTable.outletId) {
                 it[productId] = entity.id.productId.id
                 it[outletId] = entity.id.outletId
                 it[grossAmount] = entity.payload.grossAmount.with(ShippingCostService.getRoundingOptions())
