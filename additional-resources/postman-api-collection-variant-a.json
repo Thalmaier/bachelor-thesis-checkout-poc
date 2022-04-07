@@ -1,0 +1,593 @@
+{
+	"info": {
+		"_postman_id": "1ad6b4db-87f5-4fdf-b191-572403e9694f",
+		"name": "Checkout Variant A",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Basket",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {\r\n        \"id\": \"19ce029d-add8-4486-ad58-2e9300894f9f\"\r\n    },\r\n    \"outletId\": \"B100\",\r\n    \"status\": \"OPEN\",\r\n    \"customer\": null,\r\n    \"fulfillment\": \"DELIVERY\",\r\n    \"billingAddress\": null,\r\n    \"shippingAddress\": null,\r\n    \"calculationResult\": {\r\n        \"gradTotal\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"netTotal\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"shippingCostTotal\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"vatAmounts\": {}\r\n    },\r\n    \"items\": [],\r\n    \"paymentProcess\": {\r\n        \"basketId\": {\r\n            \"id\": \"19ce029d-add8-4486-ad58-2e9300894f9f\"\r\n        },\r\n        \"payments\": [],\r\n        \"amountPayed\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"amountToPay\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"amountToReturn\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"status\": \"TO_PAY\",\r\n        \"externalPaymentRef\": null\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Metrics",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {\r\n        \"id\": \"19ce029d-add8-4486-ad58-2e9300894f9f\"\r\n    },\r\n    \"outletId\": \"B100\",\r\n    \"status\": \"OPEN\",\r\n    \"customer\": null,\r\n    \"fulfillment\": \"DELIVERY\",\r\n    \"billingAddress\": null,\r\n    \"shippingAddress\": null,\r\n    \"calculationResult\": {\r\n        \"gradTotal\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"netTotal\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"shippingCostTotal\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"vatAmounts\": {}\r\n    },\r\n    \"items\": [],\r\n    \"paymentProcess\": {\r\n        \"basketId\": {\r\n            \"id\": \"19ce029d-add8-4486-ad58-2e9300894f9f\"\r\n        },\r\n        \"payments\": [],\r\n        \"amountPayed\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"amountToPay\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"amountToReturn\": {\r\n            \"currency\": {\r\n                \"context\": {\r\n                    \"empty\": false,\r\n                    \"providerName\": \"java.util.Currency\"\r\n                },\r\n                \"defaultFractionDigits\": 2,\r\n                \"currencyCode\": \"EUR\",\r\n                \"numericCode\": 978\r\n            },\r\n            \"number\": 0,\r\n            \"factory\": {\r\n                \"defaultMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": 63,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                },\r\n                \"minNumber\": null,\r\n                \"maxNumber\": null,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"maximalMonetaryContext\": {\r\n                    \"precision\": 0,\r\n                    \"maxScale\": -1,\r\n                    \"amountType\": \"org.javamoney.moneta.Money\",\r\n                    \"fixedScale\": false,\r\n                    \"empty\": false,\r\n                    \"providerName\": null\r\n                }\r\n            },\r\n            \"context\": {\r\n                \"precision\": 256,\r\n                \"maxScale\": -1,\r\n                \"amountType\": \"org.javamoney.moneta.Money\",\r\n                \"fixedScale\": false,\r\n                \"empty\": false,\r\n                \"providerName\": null\r\n            },\r\n            \"negative\": false,\r\n            \"zero\": true,\r\n            \"positive\": false,\r\n            \"positiveOrZero\": true,\r\n            \"numberStripped\": 0,\r\n            \"negativeOrZero\": true\r\n        },\r\n        \"status\": \"TO_PAY\",\r\n        \"externalPaymentRef\": null\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Create new Basket",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"outletId\": \"B100\",\r\n    \"customer\": {\r\n        \"type\": \"SESSION_ID\",\r\n        \"sessionId\": {\r\n            \"id\": \"75ab4eca-239c-4f0b-a8cc-12b1a27e8290\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Cancel Basket",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"outletId\": \"B100\",\r\n    \"customer\": {\r\n        \"type\": \"SESSION_ID\",\r\n        \"sessionId\": {\r\n            \"id\": \"75ab4eca-239c-4f0b-a8cc-12b1a27e8290\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Create new Basket Item",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/item/737c4430-0e24-45ac-9aba-895b4d60654a",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"item",
+						"737c4430-0e24-45ac-9aba-895b4d60654a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Basket Item",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/item/244167eb-06ed-4ae4-8b7d-45a1da77f83d",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"item",
+						"244167eb-06ed-4ae4-8b7d-45a1da77f83d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Basket Item Quantity",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/item/9fa9a536-ba87-40f8-9991-0d87af253281/quantity?quantity=0",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"item",
+						"9fa9a536-ba87-40f8-9991-0d87af253281",
+						"quantity"
+					],
+					"query": [
+						{
+							"key": "quantity",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Available Fulfillment",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/available-fulfillment",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"available-fulfillment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Customer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"IDENTIFIED\",\r\n    \"companyName\": \"Company Name\",\r\n    \"companyTaxId\": \"COMPANY TAX ID\",\r\n    \"customerTaxId\": \"007/225/77803\",\r\n    \"email\": \"testmail.com\",\r\n    \"name\": {\r\n        \"firstName\": \"firstName\",\r\n        \"lastName\": \"lastName\"\r\n    },\r\n    \"businessType\": \"B2C\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/customer",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Session Customer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sessionId\": {\r\n        \"id\": \"75ab4eca-239c-4f0b-a8cc-12b1a27e8290\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/customer",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Fulfillment",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"PICKUP\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/fulfillment",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"fulfillment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Shipping Address",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"country\": \"country\",\r\n    \"city\": \"city\",\r\n    \"zipCode\": \"00000\",\r\n    \"street\": \"street\",\r\n    \"houseNumber\": \"houseNumber\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/shipping-address",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"shipping-address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Billing Address",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"country\": \"country\",\r\n    \"city\": \"city\",\r\n    \"zipCode\": \"00000\",\r\n    \"street\": \"street\",\r\n    \"houseNumber\": \"houseNumber\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/billing-address",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"billing-address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Checkout Data",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fulfillment\": \"DELIVERY\",\r\n    \"customer\": {\r\n        \"type\": \"IDENTIFIED\",\r\n        \"companyName\": \"Company Name\",\r\n        \"companyTaxId\": \"COMPANY TAX ID\",\r\n        \"customerTaxId\": \"007/225/77803\",\r\n        \"email\": \"test@mail.com\",\r\n        \"name\": {\r\n            \"firstName\": \"firstName\",\r\n            \"lastName\": \"lastName\"\r\n        },\r\n        \"businessType\": \"B2C\"\r\n    },\r\n    \"shippingAddress\": {\r\n        \"country\": \"country\",\r\n        \"city\": \"city\",\r\n        \"zipCode\": \"00000\",\r\n        \"street\": \"street2\",\r\n        \"houseNumber\": \"houseNumber\"\r\n    },\r\n    \"billingAddress\": {\r\n        \"country\": \"country\",\r\n        \"city\": \"city\",\r\n        \"zipCode\": \"00000\",\r\n        \"street\": \"street\",\r\n        \"houseNumber\": \"houseNumber\"\r\n    },\r\n    \"payment\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/checkout-data",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"checkout-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Available Payment Methods",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/payment/available-payment-methods",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"payment",
+						"available-payment-methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Create new Payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"method\": \"PAYPAL\",\r\n    \"amountSelected\": {\r\n        \"amount\": 0,\r\n        \"currency\": \"EUR\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/payment",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Cancel Payment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/payment/a00bf8bf-e8c5-4ca8-aa33-524f035214f7",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"payment",
+						"a00bf8bf-e8c5-4ca8-aa33-524f035214f7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Initialize Payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/payment/initialize",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"payment",
+						"initialize"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Execute Payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/payment/execute",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"payment",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Cancel Payment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/basket/{{basketId}}/payment/cancel",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"basket",
+						"{{basketId}}",
+						"payment",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "basketId",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

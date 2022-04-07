@@ -1,0 +1,910 @@
+openapi: 3.0.3
+info:
+  title: Checkout-POC-Variant-A
+  description: Api documentation for the checkout poc software of a informatics bachelor thesis
+  version: '1.0.0'
+paths:
+  /basket:
+    post:
+      summary: Create a new basket for a specific outlet
+      tags:
+        - Basket
+      requestBody:
+        description: Outlet and customer data for basket creation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BasketCreationRequest'
+      responses:
+        201:
+          description: Basket sucessfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}:
+    get:
+      summary: Retrieve an existing basket
+      tags:
+        - Basket
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Basket retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    delete:
+      summary: Cancels an existing basket
+      tags:
+        - Basket
+      description: |
+        Cancels an existing basket only if it is not currently frozen or already finalized
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Basket sucessfully canceled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/customer:
+    put:
+      summary: Update customer data for an existing basket
+      tags:
+        - Basket
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Customer data to put onto the basket
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        200:
+          description: Customer data updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/available-fulfillment:
+    get:
+      summary: Get all available fulfillment for this basket and outlet
+      tags:
+        - Basket
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: List of all available fullfilments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FulfillmentType'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/fulfillment:
+    put:
+      summary: Set the fulfillment type for an existing busket
+      tags:
+        - Basket
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Fulfillment type to be set
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FulfillmentType'
+      responses:
+        200:
+          description: Successfully set the fulfillment type.
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/shipping-address:
+    put:
+      summary: Set the shipping address for an existing busket
+      tags:
+        - Basket
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Shipping address to be set
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        200:
+          description: Successfully set the shipping address.
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/billing-address:
+    put:
+      summary: Set the billing address for an existing busket
+      tags:
+        - Basket
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Billing address to be set
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        200:
+          description: Successfully set the billing address.
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/checkout-data:
+    put:
+      summary: Set the checkout data for an existing busket
+      tags:
+        - Basket
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Checkout data to be set
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutData'
+      responses:
+        200:
+          description: Successfully set the checkout data.
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /basket/{basketId}/item/{productId}:
+    post:
+      summary: Add basket item onto an exisiting basket.
+      tags:
+        - Basket.Item
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: productId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Customer data updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket or product not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/item/{basketItemId}:
+    delete:
+      summary: Remove a certain basket item from an existing basket.
+      tags:
+        - Basket.Item
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: basketItemId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Item removed from the basket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket or item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/item/{basketItemId}/quantity:
+    put:
+      summary: Set the concrete quantity of an basket item.
+      description: |
+        Quantity can be less or more than the current quantity. The same product will be added or the items will be
+        grouped by the product id and reduced until the passed quantity is achived.
+      tags:
+        - Basket.Item
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: basketItemId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: quantity
+          schema:
+            type: number
+          required: true
+      responses:
+        200:
+          description: Items were adjusted to the certain quantity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket or item not found or quantity not passed as query parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /basket/{basketId}/payment/available-payment-methods:
+    get:
+      summary: Returns a list of available payment methods for the basket and fulfillment type.
+      tags:
+        - Basket.Payment
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Available payment methods.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentMethod'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/payment:
+    post:
+      summary: Add a payment to the existing basket.
+      tags:
+        - Basket.Payment
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Payment that should be added to the basket
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPaymentRequest'
+      responses:
+        200:
+          description: Basket containing the new payment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/payment/{paymentId}:
+    delete:
+      summary: Cancels the payment but does not remove it from the basket.
+      tags:
+        - Basket.Payment
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: paymentId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Basket containing the adjusted payment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket or payment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/payment/initialize:
+    post:
+      summary: Initializes the payment of a basket. Basket needs to be open and contain atleast one payment.
+      tags:
+        - Basket.Payment
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Frozen basket with initialized payment process.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request. Basket validation could have failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/payment/execute:
+    post:
+      summary: Executes the payment of a basket.
+      description: |
+        Basket needs to be frozen, therefore initialize needs to be called before this endpoint. An order is automatically created if the execution succeeds
+      tags:
+        - Basket.Payment
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Completed basket with executed payment process.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /basket/{basketId}/payment/cancel:
+    delete:
+      summary: Cancels the payment of a basket. Basket needs to be frozen, therefore initialize needs to be called before this endpoint.
+      tags:
+        - Basket.Payment
+      parameters:
+        - in: path
+          name: basketId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Open basket with reseted payment process.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketResponse'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        404:
+          description: Basket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+
+components:
+  schemas:
+    BasketResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        outletId:
+          type: string
+        status:
+          $ref: '#/components/schemas/FulfillmentType'
+        customer:
+          $ref: '#/components/schemas/Customer'
+        fulfillment:
+          type: string
+          x-extensible-enum:
+            - OUTLET
+            - PICKUP
+            - DELIVERY
+        billingAddress:
+          $ref: '#/components/schemas/Address'
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        calculationResult:
+          $ref: '#/components/schemas/BasketCalculationResult'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasketItem'
+        paymentProcess:
+          $ref: '#/components/schemas/PaymentProcess'
+        order:
+          $ref: '#/components/schemas/Order'
+    Id:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+    FulfillmentType:
+      type: string
+      x-extensible-enum:
+        - OUTLET
+        - PICKUP
+        - DELIVERY
+    Customer:
+      oneOf:
+        - $ref: '#/components/schemas/IdentifiedCustomer'
+        - $ref: '#/components/schemas/SessionCustomer'
+      discriminator:
+        propertyName: type
+      properties:
+        type:
+          $ref: '#/components/schemas/CustomerType'
+    SessionCustomer:
+      allOf:
+        - $ref: '#/components/schemas/Customer'
+        - type: object
+          properties:
+            sessionId:
+              $ref: '#/components/schemas/Id'
+    IdentifiedCustomer:
+      allOf:
+        - $ref: '#/components/schemas/Customer'
+        - type: object
+          properties:
+            companyName:
+              type: string
+            companyTaxId:
+              type: string
+            customerTaxId:
+              type: string
+            email:
+              type: string
+            name:
+              $ref: '#/components/schemas/CustomerName'
+            businessType:
+              type: string
+              x-extensible-enum:
+                - B2B
+                - B2C
+    CustomerType:
+      type: string
+      x-extensible-enum:
+        - IDENTIFIED
+        - SESSION_ID
+    CustomerName:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+    Address:
+      type: object
+      properties:
+        country:
+          type: string
+        city:
+          type: string
+        zipCode:
+          type: string
+        street:
+          type: string
+        houseNumber:
+          type: string
+    BasketCalculationResult:
+      type: object
+      properties:
+        grandTotal:
+          $ref: '#/components/schemas/MonetaryAmount'
+        netTotal:
+          $ref: '#/components/schemas/MonetaryAmount'
+        shippingCostTotal:
+          $ref: '#/components/schemas/MonetaryAmount'
+        vatAmounts:
+          $ref: '#/components/schemas/VatAmount'
+    MonetaryAmount:
+      type: object
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+    VatAmount:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Vat'
+    Vat:
+      type: object
+      properties:
+        sign:
+          type: string
+        rate:
+          type: number
+        amount:
+          $ref: '#/components/schemas/MonetaryAmount'
+    BasketItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        product:
+          $ref: '#/components/schemas/Product'
+        price:
+          $ref: '#/components/schemas/Price'
+        shippingCost:
+          $ref: '#/components/schemas/MonetaryAmount'
+        calculationResult:
+          $ref: '#/components/schemas/BasketItemCalculationResult'
+    Product:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        vat:
+          $ref: '#/components/schemas/Vat'
+        updatedAt:
+          type: string
+          format: date-time
+    Price:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/PriceId'
+        grossAmount:
+          $ref: '#/components/schemas/MonetaryAmount'
+        updatedAt:
+          type: string
+          format: date-time
+    PriceId:
+      type: object
+      properties:
+        outletId:
+          type: string
+        productId:
+          type: string
+    BasketItemCalculationResult:
+      type: object
+      properties:
+        itemCost:
+          $ref: '#/components/schemas/CalculationResult'
+        shippingCost:
+          $ref: '#/components/schemas/MonetaryAmount'
+        totalCost:
+          $ref: '#/components/schemas/CalculationResult'
+    CalculationResult:
+      type: object
+      properties:
+        grossAmount:
+          $ref: '#/components/schemas/MonetaryAmount'
+        netAmount:
+          $ref: '#/components/schemas/MonetaryAmount'
+        vatAmounts:
+          $ref: '#/components/schemas/VatAmount'
+    PaymentProcess:
+      type: object
+      properties:
+        basketId:
+          $ref: '#/components/schemas/Id'
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+        amountPayed:
+          $ref: '#/components/schemas/MonetaryAmount'
+        amountToPay:
+          $ref: '#/components/schemas/MonetaryAmount'
+        amountToReturn:
+          $ref: '#/components/schemas/MonetaryAmount'
+        status:
+          type: string
+          x-enumeration-type:
+            - TO_PAY
+            - PARTIALLY_PAID
+            - PAID
+        externalPaymentRef:
+          $ref: '#/components/schemas/Id'
+    Payment:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        method:
+          $ref: '#/components/schemas/PaymentMethod'
+        amountSelected:
+          $ref: '#/components/schemas/MonetaryAmount'
+        amountUsed:
+          $ref: '#/components/schemas/MonetaryAmount'
+        amountOverpaid:
+          $ref: '#/components/schemas/MonetaryAmount'
+        status:
+          type: string
+          x-extensible-enum:
+            - SELECTED
+            - INITIALIZED
+            - EXECUTED
+            - CANCELED
+    PaymentMethod:
+      type: string
+      x-extensible-enum:
+        - PAYPAL
+        - CREDIT_CARD
+        - CASH
+        - GIFT_CARD
+    Order:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+
+    BasketCreationRequest:
+      type: object
+      properties:
+        outletId:
+          $ref: '#/components/schemas/Id'
+        customer:
+          $ref: '#/components/schemas/Customer'
+    CheckoutData:
+      type: object
+      properties:
+        fulfillment:
+          $ref: '#/components/schemas/FulfillmentType'
+        customer:
+          $ref: '#/components/schemas/Customer'
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        billingAddress:
+          $ref: '#/components/schemas/Address'
+        payment:
+          $ref: '#/components/schemas/AddPaymentRequest'
+    AddPaymentRequest:
+      type: object
+      properties:
+        method:
+          $ref: '#/components/schemas/PaymentMethod'
+        amountSelected:
+          $ref: '#/components/schemas/MonetaryAmount'
+
+    Problem:
+      type: object
+      properties:
+        title:
+          type: string
+        status:
+          type: number
+        detail:
+          type: string

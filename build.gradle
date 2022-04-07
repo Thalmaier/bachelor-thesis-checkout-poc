@@ -1,0 +1,100 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'application'
+}
+
+group 'com.mediamarktsaturn'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'ApplicationKt'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+shadowJar {
+
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ApplicationKt'
+        )
+    }
+}
+
+def koinVersion = "3.1.2"
+def ktorVersion = "1.6.7"
+def kmongoVersion = "4.4.0"
+def configVersion = "1.4.15"
+def zalandoVersion = "0.26.0"
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    // server
+    implementation "io.ktor:ktor-server-netty:$ktorVersion"
+    implementation "io.ktor:ktor-jackson:$ktorVersion"
+
+    // dependency injection
+    implementation "io.insert-koin:koin-core:$koinVersion"
+
+    //mongodb database
+    implementation "org.litote.kmongo:kmongo:$kmongoVersion"
+    implementation "org.litote.kmongo:kmongo-id-jackson:$kmongoVersion"
+
+    // embedded database for easy and fast execution
+    implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.3.1'
+    implementation 'io.zonky.test:embedded-postgres:1.3.1'
+
+    //postgreSQL database
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+    implementation 'org.jetbrains.exposed:exposed-money:0.37.3'
+    implementation 'org.jetbrains.exposed:exposed-kotlin-datetime:0.37.3'
+    implementation 'org.jetbrains.exposed:exposed-core:0.37.3'
+    runtimeOnly group: 'org.jetbrains.exposed', name: 'exposed-jdbc', version: '0.37.3'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
+
+    // Config
+    implementation "com.sksamuel.hoplite:hoplite-core:$configVersion"
+    implementation "com.sksamuel.hoplite:hoplite-yaml:$configVersion"
+
+    // Logging
+    implementation 'io.github.microutils:kotlin-logging:2.1.14'
+    implementation 'ch.qos.logback:logback-classic:1.2.7'
+
+    // JSON de-/serializer
+    implementation "javax.money:money-api:1.1"
+    implementation "org.javamoney.moneta:moneta-core:1.4.2"
+    implementation 'org.zalando:jackson-datatype-money:1.2.2'
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.+"
+
+    // zalando problem
+    implementation "org.zalando:problem:$zalandoVersion"
+    implementation "org.zalando:jackson-datatype-problem:$zalandoVersion"
+
+    // validation
+    implementation 'org.valiktor:valiktor-core:0.12.0'
+
+    // testing
+    testImplementation 'io.kotest:kotest-runner-junit5:5.1.0'
+    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation "io.insert-koin:koin-test:$koinVersion"
+    testImplementation "io.insert-koin:koin-test-junit5:$koinVersion"
+    testImplementation "io.ktor:ktor-server-test-host:$ktorVersion"
+    testImplementation "io.kotest.extensions:kotest-extensions-koin:1.1.0"
+
+
+
+}
+
