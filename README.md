@@ -42,4 +42,4 @@ The software configuration is done via an application-config.yaml file located i
 The API is documented with the openapi standard v3. The files can be found in the 'additional-resources' folder or
 online on swaggerhub:
 - [Online API Documentation for Variant A](https://app.swaggerhub.com/apis/xThale/checkout-poc-variant-a)
-- [Online API Documentation for Variant D](https://app.swaggerhub.com/apis/xThale/checkout-poc-variant-a)
+- [Online API Documentation for Variant D](https://app.swaggerhub.com/apis/xThale/checkout-poc-variant-d)
